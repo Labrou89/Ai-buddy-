@@ -143,31 +143,67 @@
   </main>
 </div>
 
+
+  
 <script>
   const form = document.getElementById("chatForm");
   const input = document.getElementById("prompt");
   const messages = document.getElementById("messages");
   const welcome = document.getElementById("welcome");
+  const status = document.querySelector(".status");
+  const API_URL = "https://ai-buddy.labroumaniayman.workers.dev";
 
-  function sendMessage(text) {
+  let busy = false;
+
+  function addMessage(text, className) {
+    const element = document.createElement("div");
+    element.className = "message " + className;
+    element.textContent = text;
+    messages.appendChild(element);
+    return element;
+  }
+
+  async function sendMessage(text) {
     const message = text.trim();
-    if (!message) return;
+    if (!message || busy) return;
 
     welcome.style.display = "none";
-
-    const userMessage = document.createElement("div");
-    userMessage.className = "message user";
-    userMessage.textContent = message;
-    messages.appendChild(userMessage);
-
-    const info = document.createElement("div");
-    info.className = "message notice";
-    info.textContent = "Deine Nachricht ist in der Oberfläche angekommen. Die KI ist noch nicht verbunden. Im nächsten Schritt richten wir ein sicheres Backend ein und verbinden AI Buddy mit einem echten KI-Modell.";
-    messages.appendChild(info);
-
+    addMessage(message, "user");
     input.value = "";
-    input.focus();
-    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    busy = true;
+
+    const sendButton = form.querySelector("button[type='submit']");
+    sendButton.disabled = true;
+    const loading = addMessage("AI Buddy denkt nach …", "notice");
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await response.json();
+      loading.remove();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Die KI-Anfrage ist fehlgeschlagen.");
+      }
+
+      addMessage(data.reply || "Die KI hat keine Antwort geliefert.", "notice");
+      status.textContent = "● KI verbunden";
+      status.style.color = "#9be7b0";
+    } catch (error) {
+      loading.remove();
+      addMessage(
+        "Verbindung fehlgeschlagen. Prüfe, ob der Cloudflare-Worker veröffentlicht wurde und Workers AI eingerichtet ist. Details: " + error.message,
+        "notice"
+      );
+    } finally {
+      busy = false;
+      sendButton.disabled = false;
+      input.focus();
+    }
   }
 
   form.addEventListener("submit", function(event) {
@@ -189,5 +225,8 @@
     input.focus();
   });
 </script>
+
+
+
 </body>
 </html>

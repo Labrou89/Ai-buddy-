@@ -359,7 +359,20 @@
 }
     
     
-    
+    .copy-button {
+  margin-top: 10px;
+  padding: 5px 9px;
+  border: 1px solid #3a4662;
+  border-radius: 7px;
+  background: transparent;
+  color: #aeb9d3;
+  font-size: 12px;
+}
+
+.copy-button:hover {
+  background: #29334c;
+  color: white;
+}
     
     }
   </style>
@@ -657,9 +670,48 @@
 
       welcome.style.display = "none";
 
-      const userMessage = addMessageToChat("user", message);
-      addMessageToScreen(userMessage);
+      function addMessageToScreen(message) {
+  const element = document.createElement("div");
 
+  const roleClass =
+    message.role === "user"
+      ? "user"
+      : message.role === "assistant"
+        ? "assistant"
+        : "notice";
+
+  element.className = "message " + roleClass;
+
+  const text = document.createElement("div");
+  text.textContent = message.content;
+  element.appendChild(text);
+
+  if (message.role === "assistant") {
+    const copyButton = document.createElement("button");
+    copyButton.className = "copy-button";
+    copyButton.textContent = "Kopieren";
+
+    copyButton.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(message.content);
+        copyButton.textContent = "Kopiert ✓";
+
+        setTimeout(() => {
+          copyButton.textContent = "Kopieren";
+        }, 1500);
+      } catch {
+        copyButton.textContent = "Fehler beim Kopieren";
+      }
+    });
+
+    element.appendChild(copyButton);
+  }
+
+  messagesElement.appendChild(element);
+  element.scrollIntoView({ behavior: "smooth", block: "end" });
+
+  return element;
+}
       input.value = "";
       busy = true;
 
@@ -734,6 +786,15 @@ const conversationHistory = chat.messages
       event.preventDefault();
       sendMessage(input.value);
     });
+    input.addEventListener("keydown", event => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+
+    if (!busy && input.value.trim()) {
+      form.requestSubmit();
+    }
+  }
+});
 
     document.querySelectorAll("[data-prompt]").forEach(button => {
       button.addEventListener("click", () => {

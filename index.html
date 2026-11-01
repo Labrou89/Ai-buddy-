@@ -1,4 +1,6 @@
 
+
+  
 <!DOCTYPE html>
 <html lang="de">
 <head>
@@ -6,8 +8,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#090d18">
   <title>AI Buddy – Dein KI-Assistent</title>
+
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: system-ui, Arial, sans-serif;
@@ -15,219 +19,678 @@
       color: #f3f5ff;
       min-height: 100vh;
     }
-    button, textarea { font: inherit; }
+
+    button, textarea, input { font: inherit; }
     button { cursor: pointer; }
-    .app { display: flex; min-height: 100vh; }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
     aside {
-      width: 250px; padding: 22px 16px;
-      background: #0e1423; border-right: 1px solid #202941;
-      display: flex; flex-direction: column; gap: 18px;
+      width: 270px;
+      padding: 20px 14px;
+      background: #0e1423;
+      border-right: 1px solid #202941;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
-    .logo { font-size: 23px; font-weight: 800; letter-spacing: -1px; }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      padding: 4px 8px;
+    }
+
     .logo span { color: #8b7bff; }
+
     .new-chat, .send {
-      border: 0; border-radius: 12px; padding: 12px;
-      color: white; background: #7161f5; font-weight: 650;
+      border: 0;
+      border-radius: 12px;
+      padding: 12px;
+      color: white;
+      background: #7161f5;
+      font-weight: 700;
     }
+
     .new-chat:hover, .send:hover { background: #8274ff; }
-    .side-note { color: #8d99b4; font-size: 13px; line-height: 1.6; }
-    .sidebar-bottom { margin-top: auto; }
-    main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+    .chat-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .chat-item {
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #cbd3e8;
+      text-align: left;
+      padding: 10px;
+      border-radius: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chat-item:hover,
+    .chat-item.active {
+      background: #171f33;
+      border-color: #29334c;
+      color: white;
+    }
+
+    .settings-button {
+      background: #171f33;
+      border: 1px solid #29334c;
+      color: #dce3f7;
+      border-radius: 10px;
+      padding: 10px;
+      width: 100%;
+      text-align: left;
+    }
+
+    .side-note {
+      color: #8d99b4;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    main {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
     header {
-      height: 70px; padding: 0 26px; display: flex;
-      align-items: center; justify-content: space-between;
+      height: 70px;
+      padding: 0 26px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       border-bottom: 1px solid #202941;
     }
-    .model { color: #b8c0d8; font-size: 13px; }
+
+    .model {
+      color: #b8c0d8;
+      font-size: 13px;
+    }
+
     .status {
-      color: #ffd78a; background: #342a19;
-      padding: 7px 10px; border-radius: 20px; font-size: 12px;
+      color: #ffd78a;
+      background: #342a19;
+      padding: 7px 10px;
+      border-radius: 20px;
+      font-size: 12px;
     }
+
     .conversation {
-      width: 100%; max-width: 850px; margin: auto;
-      padding: 36px 24px; flex: 1;
+      width: 100%;
+      max-width: 900px;
+      margin: auto;
+      padding: 32px 24px;
+      flex: 1;
     }
-    .welcome { text-align: center; padding: 9vh 0 30px; }
+
+    .welcome {
+      text-align: center;
+      padding: 9vh 0 30px;
+    }
+
     .orb {
-      width: 68px; height: 68px; margin: 0 auto 22px;
-      border-radius: 22px; display: grid; place-items: center;
-      font-size: 32px; background: linear-gradient(135deg,#8274ff,#3a9bdf);
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 22px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      font-size: 32px;
+      background: linear-gradient(135deg, #8274ff, #3a9bdf);
       box-shadow: 0 0 45px #7161f533;
     }
-    h1 { font-size: clamp(27px, 5vw, 40px); margin: 0 0 12px; }
-    .muted { color: #99a5c0; line-height: 1.7; }
+
+    h1 {
+      font-size: clamp(27px, 5vw, 40px);
+      margin: 0 0 12px;
+    }
+
+    .muted {
+      color: #99a5c0;
+      line-height: 1.7;
+    }
+
     .suggestions {
-      display: grid; grid-template-columns: repeat(2, 1fr);
-      gap: 12px; margin: 24px 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 24px 0;
     }
+
     .suggestion {
-      background: #111a2c; border: 1px solid #29334c;
-      color: #e8ebff; text-align: left; padding: 16px;
-      border-radius: 14px; line-height: 1.5;
+      background: #111a2c;
+      border: 1px solid #29334c;
+      color: #e8ebff;
+      text-align: left;
+      padding: 16px;
+      border-radius: 14px;
+      line-height: 1.5;
     }
+
     .suggestion:hover { border-color: #8274ff; }
-    .messages { display: flex; flex-direction: column; gap: 18px; }
-    .message { padding: 15px 17px; border-radius: 15px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
-    .user { align-self: flex-end; max-width: 85%; background: #242b48; }
-    .notice { background: #171e30; border: 1px solid #303b55; color: #c8d1e8; }
-    .composer-wrap { padding: 12px 24px 24px; }
-    .composer { max-width: 800px; margin: auto; }
+
+    .messages {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .message {
+      padding: 15px 17px;
+      border-radius: 15px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      max-width: 88%;
+    }
+
+    .user {
+      align-self: flex-end;
+      background: #242b48;
+    }
+
+    .assistant {
+      align-self: flex-start;
+      background: #171e30;
+      border: 1px solid #303b55;
+      color: #dbe3f7;
+    }
+
+    .notice {
+      align-self: flex-start;
+      background: #171e30;
+      border: 1px solid #303b55;
+      color: #aeb9d3;
+    }
+
+    .composer-wrap {
+      padding: 12px 24px 24px;
+    }
+
+    .composer {
+      max-width: 850px;
+      margin: auto;
+    }
+
     .input-box {
-      display: flex; gap: 10px; align-items: flex-end;
-      background: #121a2b; border: 1px solid #34405c;
-      border-radius: 17px; padding: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      background: #121a2b;
+      border: 1px solid #34405c;
+      border-radius: 17px;
+      padding: 12px;
     }
+
     textarea {
-      resize: vertical; min-height: 45px; max-height: 180px;
-      flex: 1; border: 0; outline: 0; background: transparent;
-      color: white; padding: 10px 4px;
+      resize: vertical;
+      min-height: 45px;
+      max-height: 180px;
+      flex: 1;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: white;
+      padding: 10px 4px;
     }
+
     .send { min-width: 78px; }
-    .fine-print { text-align: center; font-size: 11px; color: #7f8ba5; margin-top: 12px; }
-    @media(max-width:650px) {
-      aside { display: none; }
+
+    .fine-print {
+      text-align: center;
+      font-size: 11px;
+      color: #7f8ba5;
+      margin-top: 12px;
+    }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000a;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      width: 100%;
+      max-width: 420px;
+      background: #121a2b;
+      border: 1px solid #34405c;
+      border-radius: 18px;
+      padding: 22px;
+    }
+
+    .modal h2 { margin-top: 0; }
+
+    .modal label {
+      display: block;
+      margin: 16px 0 7px;
+      color: #b8c0d8;
+      font-size: 14px;
+    }
+
+    .modal input {
+      width: 100%;
+      background: #0c1220;
+      border: 1px solid #34405c;
+      border-radius: 10px;
+      padding: 12px;
+      color: white;
+      outline: none;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .secondary {
+      border: 1px solid #34405c;
+      background: transparent;
+      color: white;
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
+
+    @media (max-width: 700px) {
+      aside {
+        display: none;
+      }
+
       header { padding: 0 16px; }
-      .conversation { padding: 18px 16px; }
+
+      .conversation { padding: 18px 14px; }
+
       .welcome { padding-top: 6vh; }
+
       .suggestions { grid-template-columns: 1fr; }
+
       .composer-wrap { padding: 10px 12px 18px; }
+
+      .message { max-width: 94%; }
+
       .status { font-size: 11px; }
     }
   </style>
 </head>
+
 <body>
-<div class="app">
-  <aside>
-    <div class="logo">✦ AI <span>Buddy</span></div>
-    <button class="new-chat" id="newChat">＋ Neuer Chat</button>
-    <div class="side-note">Dein Platz für Ideen, Fragen, Texte und Code.</div>
-    <div class="sidebar-bottom side-note">
-      AI Buddy · Erste Version<br>
-      Deine Ideen verdienen eine gute KI.
-    </div>
-  </aside>
+  <div class="app">
+    <aside>
+      <div class="logo">✦ AI <span>Buddy</span></div>
 
-  <main>
-    <header>
-      <div>
-        <strong>AI Buddy</strong><br>
-        <span class="model">Dein persönlicher KI-Assistent</span>
+      <button class="new-chat" id="newChat">＋ Neuer Chat</button>
+
+      <div class="chat-list" id="chatList"></div>
+
+      <button class="settings-button" id="settingsButton">⚙ Einstellungen</button>
+
+      <div class="side-note">
+        AI Buddy speichert deine Chats auf diesem Gerät.
       </div>
-      <span class="status">● KI noch nicht verbunden</span>
-    </header>
+    </aside>
 
-    <section class="conversation">
-      <div class="welcome" id="welcome">
-        <div class="orb">✦</div>
-        <h1>Was möchtest du wissen?</h1>
-        <p class="muted">Lass uns Ideen entwickeln, Probleme lösen und Neues entdecken.</p>
-        <div class="suggestions">
-          <button class="suggestion" data-prompt="Hilf mir, eine kreative Idee zu entwickeln.">💡 Eine neue Idee entwickeln</button>
-          <button class="suggestion" data-prompt="Erkläre mir ein schwieriges Thema einfach.">🧠 Etwas Neues lernen</button>
-          <button class="suggestion" data-prompt="Hilf mir, einen Text zu schreiben.">✍️ Einen Text schreiben</button>
-          <button class="suggestion" data-prompt="Hilf mir beim Programmieren und erkläre den Code.">💻 Code entwickeln</button>
+    <main>
+      <header>
+        <div>
+          <strong id="headerTitle">AI Buddy</strong><br>
+          <span class="model">Dein persönlicher KI-Assistent</span>
+        </div>
+
+        <span class="status" id="status">● Bereit</span>
+      </header>
+
+      <section class="conversation">
+        <div class="welcome" id="welcome">
+          <div class="orb">✦</div>
+
+          <h1 id="welcomeTitle">Was möchtest du wissen?</h1>
+
+          <p class="muted">
+            Lass uns Ideen entwickeln, Probleme lösen und Neues entdecken.
+          </p>
+
+          <div class="suggestions">
+            <button class="suggestion" data-prompt="Hilf mir, eine kreative Idee zu entwickeln.">💡 Eine neue Idee entwickeln</button>
+            <button class="suggestion" data-prompt="Erkläre mir ein schwieriges Thema einfach.">🧠 Etwas Neues lernen</button>
+            <button class="suggestion" data-prompt="Hilf mir, einen Text zu schreiben.">✍️ Einen Text schreiben</button>
+            <button class="suggestion" data-prompt="Hilf mir beim Programmieren und erkläre den Code.">💻 Code entwickeln</button>
+          </div>
+        </div>
+
+        <div class="messages" id="messages" aria-live="polite"></div>
+      </section>
+
+      <div class="composer-wrap">
+        <div class="composer">
+          <form class="input-box" id="chatForm">
+            <textarea
+              id="prompt"
+              placeholder="Schreibe deine Nachricht an AI Buddy …"
+              aria-label="Deine Nachricht"
+              required
+            ></textarea>
+
+            <button class="send" type="submit">Senden ↑</button>
+          </form>
+
+          <p class="fine-print">
+            AI Buddy kann Fehler machen. Prüfe wichtige Informationen.
+          </p>
         </div>
       </div>
-      <div class="messages" id="messages" aria-live="polite"></div>
-    </section>
+    </main>
+  </div>
 
-    <div class="composer-wrap">
-      <div class="composer">
-        <form class="input-box" id="chatForm">
-          <textarea id="prompt" placeholder="Schreibe deine Nachricht an AI Buddy …" aria-label="Deine Nachricht" required></textarea>
-          <button class="send" type="submit">Senden ↑</button>
-        </form>
-        <p class="fine-print">Erste Version · Die echte KI-Anbindung folgt als nächster Schritt.</p>
+  <div class="modal-backdrop" id="settingsModal">
+    <div class="modal">
+      <h2>Einstellungen</h2>
+
+      <label for="userName">Dein Name</label>
+      <input id="userName" type="text" maxlength="40" placeholder="Zum Beispiel Alex">
+
+      <div class="modal-actions">
+        <button class="secondary" id="closeSettings">Abbrechen</button>
+        <button class="send" id="saveSettings">Speichern</button>
       </div>
     </div>
-  </main>
-</div>
+  </div>
 
+  <script>
+    const API_URL = "https://ai-buddy-api.labroumaniayman.workers.dev";
 
-  
-<script>
-  const form = document.getElementById("chatForm");
-  const input = document.getElementById("prompt");
-  const messages = document.getElementById("messages");
-  const welcome = document.getElementById("welcome");
-  const status = document.querySelector(".status");
-  const API_URL = "https://ai-buddy-api.labroumaniayman.workers.dev";
-  let busy = false;
+    const STORAGE_KEY = "aiBuddyChats";
+    const SETTINGS_KEY = "aiBuddySettings";
 
-  function addMessage(text, className) {
-    const element = document.createElement("div");
-    element.className = "message " + className;
-    element.textContent = text;
-    messages.appendChild(element);
-    return element;
-  }
+    const form = document.getElementById("chatForm");
+    const input = document.getElementById("prompt");
+    const messagesElement = document.getElementById("messages");
+    const welcome = document.getElementById("welcome");
+    const status = document.getElementById("status");
+    const chatList = document.getElementById("chatList");
 
-  async function sendMessage(text) {
-    const message = text.trim();
-    if (!message || busy) return;
+    let busy = false;
+    let chats = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    let settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+    let activeChatId = null;
 
-    welcome.style.display = "none";
-    addMessage(message, "user");
-    input.value = "";
-    busy = true;
+    function createId() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2);
+    }
 
-    const sendButton = form.querySelector("button[type='submit']");
-    sendButton.disabled = true;
-    const loading = addMessage("AI Buddy denkt nach …", "notice");
+    function saveChats() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(chats));
+    }
 
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message })
-      });
+    function saveSettingsData() {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    }
 
-      const raw = await response.text();
-console.log("Worker-Antwort:", response.status, raw);
-const data = JSON.parse(raw);
-      loading.remove();
+    function getActiveChat() {
+      return chats.find(chat => chat.id === activeChatId);
+    }
 
-      if (!response.ok) {
-        throw new Error(data.error || "Die KI-Anfrage ist fehlgeschlagen.");
-      }
+    function createChat() {
+      const chat = {
+        id: createId(),
+        title: "Neuer Chat",
+        createdAt: Date.now(),
+        messages: []
+      };
 
-      addMessage(data.reply || "Die KI hat keine Antwort geliefert.", "notice");
-      status.textContent = "● KI verbunden";
-      status.style.color = "#9be7b0";
-    } catch (error) {
-      loading.remove();
-      addMessage(
-        "Verbindung fehlgeschlagen. Prüfe, ob der Cloudflare-Worker veröffentlicht wurde und Workers AI eingerichtet ist. Details: " + error.message,
-        "notice"
-      );
-    } finally {
-      busy = false;
-      sendButton.disabled = false;
+      chats.unshift(chat);
+      activeChatId = chat.id;
+      saveChats();
+      renderChatList();
+      renderActiveChat();
       input.focus();
     }
-  }
 
-  form.addEventListener("submit", function(event) {
-    event.preventDefault();
-    sendMessage(input.value);
-  });
+    function renderChatList() {
+      chatList.replaceChildren();
 
-  document.querySelectorAll("[data-prompt]").forEach(function(button) {
-    button.addEventListener("click", function() {
-      input.value = button.dataset.prompt;
-      input.focus();
+      chats.forEach(chat => {
+        const button = document.createElement("button");
+        button.className = "chat-item" + (chat.id === activeChatId ? " active" : "");
+        button.textContent = chat.title;
+
+        button.addEventListener("click", () => {
+          if (busy) return;
+          activeChatId = chat.id;
+          renderChatList();
+          renderActiveChat();
+        });
+
+        chatList.appendChild(button);
+      });
+    }
+
+    function addMessageToScreen(message) {
+      const element = document.createElement("div");
+
+      const roleClass =
+        message.role === "user"
+          ? "user"
+          : message.role === "assistant"
+            ? "assistant"
+            : "notice";
+
+      element.className = "message " + roleClass;
+      element.textContent = message.content;
+
+      messagesElement.appendChild(element);
+      element.scrollIntoView({ behavior: "smooth", block: "end" });
+
+      return element;
+    }
+
+    function renderActiveChat() {
+      messagesElement.replaceChildren();
+
+      const chat = getActiveChat();
+
+      if (!chat || chat.messages.length === 0) {
+        welcome.style.display = "";
+        return;
+      }
+
+      welcome.style.display = "none";
+
+      chat.messages.forEach(addMessageToScreen);
+    }
+
+    function updateChatTitle(chat) {
+      const firstUserMessage = chat.messages.find(message => message.role === "user");
+
+      if (firstUserMessage) {
+        chat.title =
+          firstUserMessage.content.length > 32
+            ? firstUserMessage.content.slice(0, 32) + "…"
+            : firstUserMessage.content;
+      }
+    }
+
+    function addMessageToChat(role, content) {
+      const chat = getActiveChat();
+
+      if (!chat) return;
+
+      const message = { role, content };
+
+      chat.messages.push(message);
+      updateChatTitle(chat);
+      saveChats();
+      renderChatList();
+
+      return message;
+    }
+
+    async function sendMessage(text) {
+      const message = text.trim();
+
+      if (!message || busy) return;
+
+      if (!activeChatId) {
+        createChat();
+      }
+
+      welcome.style.display = "none";
+
+      const userMessage = addMessageToChat("user", message);
+      addMessageToScreen(userMessage);
+
+      input.value = "";
+      busy = true;
+
+      const sendButton = form.querySelector("button[type='submit']");
+      sendButton.disabled = true;
+
+      status.textContent = "● AI Buddy denkt nach …";
+
+      const loading = document.createElement("div");
+      loading.className = "message notice";
+      loading.textContent = "AI Buddy denkt nach …";
+      messagesElement.appendChild(loading);
+
+      try {
+        const chat = getActiveChat();
+
+        /*
+          Wir senden den gesamten bisherigen Gesprächskontext.
+          Der Worker wird im nächsten Schritt dafür angepasst.
+        */
+        const conversationHistory = chat.messages.map(item => ({
+          role: item.role,
+          content: item.content
+        }));
+
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message,
+            history: conversationHistory.slice(-20)
+          })
+        });
+
+        const raw = await response.text();
+        const data = JSON.parse(raw);
+
+        loading.remove();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Die KI-Anfrage ist fehlgeschlagen.");
+        }
+
+        const replyText =
+          data.reply || "Die KI hat keine Antwort geliefert.";
+
+        const assistantMessage = addMessageToChat("assistant", replyText);
+        addMessageToScreen(assistantMessage);
+
+        status.textContent = "● KI verbunden";
+        status.style.color = "#9be7b0";
+      } catch (error) {
+        loading.remove();
+
+        const errorText =
+          "Verbindung fehlgeschlagen: " + error.message;
+
+        const errorMessage = addMessageToChat("notice", errorText);
+        addMessageToScreen(errorMessage);
+
+        status.textContent = "● Verbindung fehlgeschlagen";
+        status.style.color = "#ff9b9b";
+      } finally {
+        busy = false;
+        sendButton.disabled = false;
+        input.focus();
+      }
+    }
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      sendMessage(input.value);
     });
-  });
 
-  document.getElementById("newChat").addEventListener("click", function() {
-    messages.replaceChildren();
-    welcome.style.display = "";
-    input.value = "";
-    input.focus();
-  });
-</script>
+    document.querySelectorAll("[data-prompt]").forEach(button => {
+      button.addEventListener("click", () => {
+        input.value = button.dataset.prompt;
+        input.focus();
+      });
+    });
 
+    document.getElementById("newChat").addEventListener("click", () => {
+      if (!busy) createChat();
+    });
 
+    // Einstellungen
+    const settingsModal = document.getElementById("settingsModal");
+    const userNameInput = document.getElementById("userName");
 
+    document.getElementById("settingsButton").addEventListener("click", () => {
+      userNameInput.value = settings.name || "";
+      settingsModal.classList.add("open");
+      userNameInput.focus();
+    });
+
+    document.getElementById("closeSettings").addEventListener("click", () => {
+      settingsModal.classList.remove("open");
+    });
+
+    document.getElementById("saveSettings").addEventListener("click", () => {
+      settings.name = userNameInput.value.trim();
+      saveSettingsData();
+      updatePersonalization();
+      settingsModal.classList.remove("open");
+    });
+
+    function updatePersonalization() {
+      const name = settings.name;
+
+      document.getElementById("headerTitle").textContent =
+        name ? "AI Buddy · " + name : "AI Buddy";
+
+      document.getElementById("welcomeTitle").textContent =
+        name
+          ? "Hallo " + name + "! Was möchtest du wissen?"
+          : "Was möchtest du wissen?";
+    }
+
+    // Beim Start gespeicherte Chats laden
+    if (chats.length > 0) {
+      activeChatId = chats[0].id;
+    } else {
+      createChat();
+    }
+
+    renderChatList();
+    renderActiveChat();
+    updatePersonalization();
+  </script>
 </body>
 </html>

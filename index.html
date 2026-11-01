@@ -469,7 +469,77 @@
     }
 
     function renderChatList() {
-      chatList.replaceChildren();
+  chatList.replaceChildren();
+
+  chats.forEach(chat => {
+    const item = document.createElement("div");
+    item.className = "chat-row" + (chat.id === activeChatId ? " active" : "");
+
+    const selectButton = document.createElement("button");
+    selectButton.className = "chat-item";
+    selectButton.textContent = chat.title;
+
+    selectButton.addEventListener("click", () => {
+      if (busy) return;
+      activeChatId = chat.id;
+      renderChatList();
+      renderActiveChat();
+    });
+
+    const menuButton = document.createElement("button");
+    menuButton.className = "chat-menu";
+    menuButton.textContent = "⋯";
+    menuButton.title = "Chat verwalten";
+
+    menuButton.addEventListener("click", event => {
+      event.stopPropagation();
+
+      const action = prompt(
+        "Was möchtest du tun?\n\n" +
+        "1 = Chat umbenennen\n" +
+        "2 = Chat löschen\n\n" +
+        "Abbrechen = nichts tun"
+      );
+
+      if (action === "1") {
+        const newTitle = prompt("Neuer Name für diesen Chat:", chat.title);
+
+        if (newTitle && newTitle.trim()) {
+          chat.title = newTitle.trim().slice(0, 60);
+          saveChats();
+          renderChatList();
+        }
+      }
+
+      if (action === "2") {
+        const confirmed = confirm(
+          `Möchtest du „${chat.title}“ wirklich löschen?`
+        );
+
+        if (confirmed) {
+          chats = chats.filter(item => item.id !== chat.id);
+
+          if (activeChatId === chat.id) {
+            if (chats.length > 0) {
+              activeChatId = chats[0].id;
+            } else {
+              createChat();
+              return;
+            }
+          }
+
+          saveChats();
+          renderChatList();
+          renderActiveChat();
+        }
+      }
+    });
+
+    item.appendChild(selectButton);
+    item.appendChild(menuButton);
+    chatList.appendChild(item);
+  });
+}
 
       chats.forEach(chat => {
         const button = document.createElement("button");

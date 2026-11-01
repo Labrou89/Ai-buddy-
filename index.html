@@ -577,15 +577,14 @@
       try {
         const chat = getActiveChat();
 
-        /*
-          Wir senden den gesamten bisherigen Gesprächskontext.
-          Der Worker wird im nächsten Schritt dafür angepasst.
-        */
-        const conversationHistory = chat.messages.map(item => ({
-          role: item.role,
-          content: item.content
-        }));
-
+       // Wir senden nur die bisherigen Nachrichten als Kontext.
+// Die aktuelle Nachricht wird separat an den Worker geschickt.
+const conversationHistory = chat.messages
+  .slice(0, -1)
+  .map(item => ({
+    role: item.role,
+    content: item.content
+  }));
         const response = await fetch(API_URL, {
           method: "POST",
           headers: {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080b14">
+  <meta name="theme-color" content="#070d18">
   <title>AI Buddy – Dein KI-Assistent</title>
 
   <style>
@@ -631,6 +631,313 @@
         font-size: 11px;
       }
     }
+
+
+    /* =========================================
+       AI BUDDY — FUTURISTIC DESIGN LAYER
+       Rein visuelle Überarbeitung; Chat-Logik bleibt erhalten.
+    ========================================= */
+
+    :root {
+      --bg: #070d18;
+      --sidebar: #091321;
+      --surface: rgba(15, 28, 45, 0.88);
+      --surface-light: #122238;
+      --border: rgba(120, 190, 220, 0.15);
+      --text: #edf7ff;
+      --muted: #91a8bd;
+      --primary: #55d6e8;
+      --primary-light: #a0f0f5;
+      --blue: #5b9dff;
+      --danger: #ff8294;
+      --success: #74e2bb;
+    }
+
+    body {
+      background:
+        radial-gradient(ellipse at 78% 12%, rgba(31, 130, 166, 0.17), transparent 34rem),
+        radial-gradient(ellipse at 45% 88%, rgba(33, 91, 153, 0.12), transparent 36rem),
+        linear-gradient(rgba(83, 157, 190, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(83, 157, 190, 0.025) 1px, transparent 1px),
+        var(--bg);
+      background-size: auto, auto, 42px 42px, 42px 42px, auto;
+      letter-spacing: -0.01em;
+    }
+
+    aside {
+      width: 286px;
+      padding: 24px 16px;
+      background: linear-gradient(180deg, rgba(9, 19, 33, 0.97), rgba(7, 15, 27, 0.96));
+      border-right: 1px solid rgba(105, 190, 215, 0.13);
+      box-shadow: 12px 0 50px rgba(0, 0, 0, 0.12);
+    }
+
+    .brand {
+      padding: 5px 9px 18px;
+      gap: 13px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      color: #06131d;
+      background: linear-gradient(145deg, #a4f4f2, #4fc5e4 55%, #548cff);
+      box-shadow: 0 0 26px rgba(72, 207, 225, 0.23), inset 0 1px 0 rgba(255,255,255,.55);
+    }
+
+    .brand-name {
+      font-size: 19px;
+      letter-spacing: -0.8px;
+    }
+
+    .brand-name span {
+      color: #8ce8ee;
+    }
+
+    .new-chat {
+      border: 1px solid rgba(123, 226, 235, 0.28);
+      border-radius: 12px;
+      padding: 13px 14px;
+      background: linear-gradient(110deg, rgba(44, 153, 179, 0.95), rgba(54, 113, 190, 0.95));
+      box-shadow: 0 8px 28px rgba(29, 144, 177, 0.16), inset 0 1px 0 rgba(255,255,255,.18);
+    }
+
+    .new-chat:hover {
+      box-shadow: 0 10px 32px rgba(44, 174, 198, 0.24);
+    }
+
+    .chat-row {
+      border: 1px solid transparent;
+    }
+
+    .chat-row:hover,
+    .chat-row.active {
+      background: rgba(78, 170, 196, 0.09);
+      border-color: rgba(98, 195, 214, 0.12);
+    }
+
+    .chat-item {
+      color: #a9bdce;
+    }
+
+    .chat-menu:hover,
+    .settings-button:hover {
+      color: #c8f8fb;
+      background: rgba(76, 185, 207, 0.09);
+    }
+
+    .settings-button {
+      border-color: rgba(117, 183, 204, 0.17);
+      background: rgba(18, 37, 55, 0.55);
+      color: #c2d7e6;
+    }
+
+    header {
+      height: 76px;
+      padding: 0 32px;
+      border-bottom-color: rgba(113, 187, 209, 0.13);
+      background: rgba(7, 13, 24, 0.64);
+    }
+
+    .header-title {
+      font-size: 15px;
+      letter-spacing: -0.2px;
+    }
+
+    .model {
+      color: #8da8bc;
+      letter-spacing: 0.01em;
+    }
+
+    .status {
+      border-color: rgba(105, 193, 207, 0.2);
+      color: #b9d6e1;
+      background: rgba(21, 48, 64, 0.58);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+    }
+
+    .conversation {
+      max-width: 1000px;
+      padding: 34px 30px;
+    }
+
+    .welcome {
+      padding-top: 9vh;
+    }
+
+    .orb {
+      width: 88px;
+      height: 88px;
+      border-radius: 28px;
+      color: #06131d;
+      background: radial-gradient(circle at 30% 22%, #c7ffff, #5bd6e6 48%, #397fcb);
+      box-shadow:
+        0 0 0 1px rgba(146, 237, 245, 0.25),
+        0 0 0 10px rgba(70, 194, 215, 0.045),
+        0 0 55px rgba(55, 190, 213, 0.24);
+      animation: orbGlow 5s ease-in-out infinite;
+    }
+
+    .welcome h1 {
+      font-size: clamp(31px, 5vw, 46px);
+      letter-spacing: -1.8px;
+      background: linear-gradient(100deg, #f2fbff 15%, #b4e9f2 58%, #83baff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .muted {
+      color: #9bb2c4;
+    }
+
+    .suggestions {
+      max-width: 760px;
+      gap: 13px;
+    }
+
+    .suggestion {
+      min-height: 82px;
+      border-radius: 14px;
+      border-color: rgba(116, 185, 207, 0.16);
+      background: linear-gradient(145deg, rgba(17, 37, 56, 0.86), rgba(12, 25, 42, 0.86));
+      color: #e3f2fa;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+    }
+
+    .suggestion:hover {
+      transform: translateY(-2px);
+      border-color: rgba(89, 213, 226, 0.45);
+      background: linear-gradient(145deg, rgba(22, 51, 71, 0.95), rgba(13, 31, 51, 0.95));
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14), 0 0 22px rgba(57, 183, 205, 0.06);
+    }
+
+    .messages {
+      gap: 21px;
+    }
+
+    .message {
+      padding: 16px 19px;
+      border-radius: 17px;
+      line-height: 1.7;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
+    }
+
+    .message.user {
+      color: #f5fdff;
+      background: linear-gradient(125deg, #247f9d, #326fb4);
+      border: 1px solid rgba(144, 228, 241, 0.19);
+      border-bottom-right-radius: 5px;
+      box-shadow: 0 8px 26px rgba(25, 120, 158, 0.17);
+    }
+
+    .message.assistant {
+      color: #e2edf5;
+      background: linear-gradient(145deg, rgba(17, 32, 50, 0.96), rgba(13, 25, 41, 0.96));
+      border: 1px solid rgba(120, 186, 207, 0.16);
+      border-bottom-left-radius: 5px;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.13), inset 0 1px 0 rgba(255,255,255,.025);
+    }
+
+    .message.notice {
+      color: #9bb7c8;
+      border-color: rgba(116, 190, 208, 0.15);
+    }
+
+    .copy-button {
+      border-color: rgba(126, 190, 208, 0.2);
+      color: #9db8c9;
+      background: rgba(7, 17, 29, 0.35);
+    }
+
+    .copy-button:hover {
+      color: #d8fbff;
+      background: rgba(70, 174, 197, 0.1);
+    }
+
+    .composer-wrap {
+      padding: 12px 28px 25px;
+    }
+
+    .composer {
+      max-width: 940px;
+    }
+
+    .input-box {
+      border-color: rgba(113, 192, 211, 0.22);
+      border-radius: 18px;
+      padding: 10px 11px 10px 17px;
+      background: rgba(12, 26, 42, 0.94);
+      box-shadow: 0 14px 48px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255,255,255,.035);
+    }
+
+    .input-box:focus-within {
+      border-color: rgba(90, 214, 228, 0.62);
+      box-shadow: 0 0 0 4px rgba(73, 194, 214, 0.08), 0 14px 48px rgba(0,0,0,.22);
+    }
+
+    textarea::placeholder {
+      color: #718da2;
+    }
+
+    .send {
+      border: 1px solid rgba(155, 242, 245, 0.22);
+      border-radius: 12px;
+      color: #06131c;
+      background: linear-gradient(135deg, #9cf1ef, #50c5e1 58%, #5b9dff);
+      box-shadow: 0 5px 18px rgba(55, 181, 209, 0.18);
+    }
+
+    .send:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(55, 181, 209, 0.27);
+    }
+
+    .fine-print,
+    .side-note {
+      color: #6e879a;
+    }
+
+    .modal {
+      border-color: rgba(116, 190, 208, 0.2);
+      background: linear-gradient(145deg, #12253a, #0c1929);
+      box-shadow: 0 25px 90px rgba(0, 0, 0, 0.55), 0 0 45px rgba(42, 143, 169, 0.08);
+    }
+
+    .modal input {
+      border-color: rgba(116, 190, 208, 0.18);
+      background: #091523;
+    }
+
+    .secondary {
+      border-color: rgba(116, 190, 208, 0.2);
+      color: #c6dbe8;
+    }
+
+    @keyframes orbGlow {
+      0%, 100% { box-shadow: 0 0 0 1px rgba(146,237,245,.25), 0 0 0 10px rgba(70,194,215,.045), 0 0 48px rgba(55,190,213,.19); }
+      50% { box-shadow: 0 0 0 1px rgba(146,237,245,.35), 0 0 0 13px rgba(70,194,215,.055), 0 0 64px rgba(55,190,213,.27); }
+    }
+
+    @media (max-width: 720px) {
+      aside {
+        display: none;
+      }
+      header {
+        padding: 0 17px;
+      }
+      .conversation {
+        padding: 22px 14px;
+      }
+      .composer-wrap {
+        padding: 8px 11px 17px;
+      }
+      .welcome {
+        padding-top: 6vh;
+      }
+    }
+
   </style>
 </head>
 
@@ -1391,7 +1698,7 @@
     /* =========================================
        VORSCHLÄGE
     ========================================= */
-
+    
     document
       .querySelectorAll("[data-prompt]")
       .forEach(button => {
@@ -1550,4 +1857,3 @@
  
      
  
-
